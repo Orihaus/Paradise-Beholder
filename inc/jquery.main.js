@@ -25,6 +25,7 @@ function apiQuery(location)
 			}
 			i++;
 		}
+		
 		console.log("location");
 		console.log(parsed_location);
 		console.log("vessels");
@@ -33,14 +34,10 @@ function apiQuery(location)
 		$("#location").html(parsed_location[1]);
 		$("#note").html(parsed_location[4]);
 
-		// Print vessels
 		i = 0;
 		while( i<parsed_vessels.length){
 			$("#vessels").append("<a href=''>"+parsed_vessels[i][1]+"</a><br />");
 			i++;
 		}
-
-
-
 	});
 }
