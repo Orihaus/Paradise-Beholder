@@ -4,10 +4,18 @@ var origin = 1;
 $(document).ready(function()
 {
 	apiQuery(origin);
+
+	$("vessel").live("click", function(){ 
+		targetLocation = $(this).attr("data");
+		apiQuery(targetLocation);
+	}); 
+
 });
 
 function apiQuery(location)
 {
+	clear();
+
 	$.ajax({ type: "POST", url: "http://api.xxiivv.com/paradise/beholder", data: { values:"{\"owner\":\""+owner+"\",\"location\":\""+location+"\"}" }
 	}).done(function( content_raw ) {
 
@@ -25,19 +33,21 @@ function apiQuery(location)
 			}
 			i++;
 		}
-		
-		console.log("location");
-		console.log(parsed_location);
-		console.log("vessels");
-		console.log(parsed_vessels);
 
 		$("#location").html(parsed_location[1]);
 		$("#note").html(parsed_location[4]);
 
 		i = 0;
 		while( i<parsed_vessels.length){
-			$("#vessels").append("<a href=''>"+parsed_vessels[i][1]+"</a><br />");
+			$("#vessels").append("<vessel data='"+parsed_vessels[i][0]+"'>"+parsed_vessels[i][1]+"</vessel><br />");
 			i++;
 		}
 	});
+}
+
+function clear()
+{
+	$("#location").html("");
+	$("#note").html("");
+	$("#vessels").html("");
 }
