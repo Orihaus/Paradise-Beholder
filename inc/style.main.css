@@ -8,4 +8,4 @@ p { margin-bottom:20px;}
 vessel { text-transform: capitalize; color:#333; font-weight:bold; cursor:pointer;}
 p.destinations * { font-size:16px; line-height: 16px; font-style: italic}
 
-div.main p::after { content:".";}
+div.main p::after { content:"";}

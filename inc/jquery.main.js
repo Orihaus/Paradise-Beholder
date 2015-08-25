@@ -14,11 +14,13 @@ $(document).ready(function()
 {
 	loadUniverse(universeId);
 
-	console.log(universeArray)
+	console.log( universeArray )
+
+	inquisitorParse( worldLocation, finishedParsing );
 
 	$("vessel").live("click", function(){ 
 		targetLocation = $(this).attr("data");
-		userLocation = targetLocation;
+		currentWorldLocationID = targetLocation;
 		displayWorld();
 	}); 
 });
@@ -37,36 +39,46 @@ function loadUniverse(location)
 
 function saveWorld(universeArray)
 {
-	console.log(universeArray);
-	displayWorld();
+	//console.log(universeArray);
+	//displayWorld();
+}
+
+var worldLocation = 'ToBurninMemory_World.inq';
+var world;
+var currentWorldLocationID = 24;
+
+function finishedParsing( result )
+{
+    world = result;
+    console.log( world );
+    displayWorld();
 }
 
 function displayWorld()
 {
 	clear();
 	
-	var parsed_location = null;
-	var parsed_visibles = [];
+	$( "#location" ).html( world.rawlocations[currentWorldLocationID].name );
+	$( "#parent" ).html( "- " + world.rawlocations[currentWorldLocationID].region + " -" );
+	$( "#note" ).html( world.rawlocations[currentWorldLocationID].desc );
 
-	i = 0;
-	while( i<universeArray.length){
-		if( universeArray[i][0] == userLocation ){
-			parsed_location = universeArray[i];
-		}
-		else if( universeArray[i][3] == userLocation ){
-			parsed_visibles.push(universeArray[i]);
-		}
-		i++;
+	var child = 0;
+	for ( var objectname in world.rawlocations[currentWorldLocationID].parent )
+	{
+	    if ( child > 0 )
+	    {
+	        var childid = world.rawlocations[currentWorldLocationID].parent[objectname].id;
+
+	        if ( childid != -1 )
+	        {
+	            console.log( "inquisitor: Enumerating Sibling: " + childid );
+	            $( "#vessels" ).append( "<vessel data='" + childid + "'>" + world.rawlocations[childid].name + "</vessel><br />" );
+	        }
+	    }
+	    child++;
 	}
 
-	$("#location").html(parsed_location[1]);
-	$("#note").html(parsed_location[4]);
-
-	i = 0;
-	while( i < parsed_visibles.length){
-		$("#vessels").append("<vessel data='"+parsed_visibles[i][0]+"'>"+parsed_visibles[i][1]+"</vessel><br />");
-		i++;
-	}
+    //
 }
 
 function clear()
